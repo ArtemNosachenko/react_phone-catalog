@@ -41,7 +41,7 @@ export const CartItem: React.FC<Props> = ({ item }) => {
       {/* Зображення */}
       <Link to={`/product/${product.itemId}`} className={styles.imageWrapper}>
         <img
-          src={`/${product.image}`}
+          src={`${import.meta.env.BASE_URL}${product.image.replace(/^\/+/, '')}`}
           alt={product.name}
           className={styles.image}
         />

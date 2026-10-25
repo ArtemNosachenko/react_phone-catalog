@@ -115,7 +115,7 @@ export const ProductDetailsPage = () => {
                   className={`${styles.thumbBtn} ${selectedImage === img ? styles.activeThumb : ''}`}
                 >
                   <img
-                    src={`/${img}`}
+                    src={`${import.meta.env.BASE_URL}${img.replace(/^\/+/, '')}`}
                     alt={product.name}
                     className={styles.thumbImage}
                   />
