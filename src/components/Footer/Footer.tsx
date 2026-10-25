@@ -14,7 +14,10 @@ export const Footer = () => {
       {/* Поєднуємо глобальний клас container та локальний styles.container */}
       <div className={`container ${styles.container}`}>
         <Link to="/" className={styles.logo}>
-          <img src="./img/icons/logo.svg" alt="Nice Gadgets Logo" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
+            alt="Nice Gadget Logo"
+          />
         </Link>
 
         <div className={styles.links}>
@@ -41,7 +44,10 @@ export const Footer = () => {
         >
           <span>Back to top</span>
           <div className={styles.arrowIcon}>
-            <img src="./img/icons/arrow-up.svg" alt="Back to top" />
+            <img
+              src={`${import.meta.env.BASE_URL}img/icons/arrow-up.svg`}
+              alt="Back to top"
+            />
           </div>
         </button>
       </div>
