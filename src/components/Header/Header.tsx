@@ -28,7 +28,7 @@ export const Header = () => {
           {/* Логотип */}
           <Link to="/" className={styles.logo} onClick={closeMenu}>
             <img
-              src="/img/icons/logo.svg"
+              src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
               alt="Nice Gadgets"
               className={styles.logoImg}
             />
@@ -67,7 +67,10 @@ export const Header = () => {
 
           <NavLink to="/cart" className={getIconLinkClass}>
             <div className={styles.iconWrapper}>
-              <img src="/img/icons/cart.svg" alt="Cart" />
+              <img
+                src={`${import.meta.env.BASE_URL}img/icons/cart.svg`}
+                alt="Cart"
+              />
               {totalCartCount > 0 && (
                 <span className={styles.badge}>{totalCartCount}</span>
               )}

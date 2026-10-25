@@ -71,7 +71,10 @@ export const TabletsPage = () => {
       {/* Хлібні крихти з іконкою будинку згідно з Figma */}
       <div className={styles.breadcrumbs}>
         <Link to="/" className={styles.crumbLink}>
-          <img src="/img/icons/home.svg" alt="Home" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/icons/home.svg`}
+            alt="Home"
+          />
         </Link>
         <span className={styles.crumbSeparator}>&gt;</span>
         <span className={styles.crumbCurrent}>Tablets</span>
