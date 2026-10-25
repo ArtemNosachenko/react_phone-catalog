@@ -33,7 +33,11 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
     <div className={styles.card}>
       {/* Картинка із посиланням на деталі */}
       <Link to={`/product/${itemId}`} className={styles.imageLink}>
-        <img src={`/${image}`} alt={name} className={styles.image} />
+        <img
+          src={`${import.meta.env.BASE_URL}${image.replace(/^\/+/, '')}`}
+          alt={name}
+          className={styles.image}
+        />
       </Link>
 
       {/* Назва товару із посиланням */}
