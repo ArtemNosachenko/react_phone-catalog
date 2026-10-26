@@ -4,6 +4,7 @@ import { Product } from '../../types/Product';
 import { getProducts } from '../../api/product';
 import { ProductCard } from '../../components/ProductCard';
 import { getPreparedProducts } from '../../utils/getPreparedProducts';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './PhonesPage.module.scss';
 
 export const PhonesPage = () => {
@@ -24,8 +25,12 @@ export const PhonesPage = () => {
 
         setProducts(phonesOnly);
       })
-      .catch(() => setError('Failed to load phones'))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setError('Failed to load phones');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -68,14 +73,11 @@ export const PhonesPage = () => {
 
   return (
     <main className={`container ${styles.pageWrapper}`}>
-      {/* Хлібні крихти з іконкою будинку */}
       <div className={styles.breadcrumbs}>
-        <Link to="/" className={styles.crumbLink}>
-          <img
-            src={`${import.meta.env.BASE_URL}img/icons/home.svg`}
-            alt="Home"
-          />
+        <Link to="/" className={styles.crumbLink} aria-label="Home">
+          <img src={getPublicUrl('img/icons/home.svg')} alt="" />
         </Link>
+
         <span className={styles.crumbSeparator}>&gt;</span>
         <span className={styles.crumbCurrent}>Phones</span>
       </div>
@@ -83,12 +85,12 @@ export const PhonesPage = () => {
       <h1 className={styles.title}>Mobile phones</h1>
       <p className={styles.count}>{totalItems} models</p>
 
-      {/* Блок фільтрів */}
       <div className={styles.filters}>
         <div className={styles.filterGroup}>
           <label htmlFor="sort-by" className={styles.label}>
             Sort by
           </label>
+
           <select
             id="sort-by"
             value={sortBy}
@@ -105,6 +107,7 @@ export const PhonesPage = () => {
           <label htmlFor="per-page" className={styles.label}>
             Items on page
           </label>
+
           <select
             id="per-page"
             value={perPage}
@@ -119,7 +122,6 @@ export const PhonesPage = () => {
         </div>
       </div>
 
-      {/* Глобальна адаптивна сітка товарів з Figma */}
       <div className="mainGrid">
         {preparedProducts.map(product => (
           <div key={product.id} className="colProductCard">
@@ -128,7 +130,6 @@ export const PhonesPage = () => {
         ))}
       </div>
 
-      {/* Пагінація */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
@@ -136,6 +137,7 @@ export const PhonesPage = () => {
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
             className={styles.pageBtn}
+            aria-label="Previous page"
           >
             &lt;
           </button>
@@ -145,7 +147,10 @@ export const PhonesPage = () => {
               key={page}
               type="button"
               onClick={() => handlePageChange(page)}
-              className={`${styles.pageBtn} ${currentPage === page ? styles.activePage : ''}`}
+              className={`${styles.pageBtn} ${
+                currentPage === page ? styles.activePage : ''
+              }`}
+              aria-current={currentPage === page ? 'page' : undefined}
             >
               {page}
             </button>
@@ -156,6 +161,7 @@ export const PhonesPage = () => {
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
             className={styles.pageBtn}
+            aria-label="Next page"
           >
             &gt;
           </button>

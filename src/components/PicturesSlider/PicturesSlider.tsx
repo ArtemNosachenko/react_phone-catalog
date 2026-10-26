@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './PicturesSlider.module.scss';
 
 const bannerImages = [
   {
     id: 1,
-    src: `${import.meta.env.BASE_URL}img/banner-phones.png`,
+    src: getPublicUrl('img/banner-phones.png'),
     alt: 'Banner Phones',
   },
   {
     id: 2,
-    src: `${import.meta.env.BASE_URL}img/banner-tablets.png`,
+    src: getPublicUrl('img/banner-tablets.png'),
     alt: 'Banner Tablets',
   },
   {
     id: 3,
-    src: `${import.meta.env.BASE_URL}img/banner-accessories.png`,
+    src: getPublicUrl('img/banner-accessories.png'),
     alt: 'Banner Accessories',
   },
 ];

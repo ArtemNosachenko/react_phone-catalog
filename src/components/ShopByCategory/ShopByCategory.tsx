@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types/Product';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './ShopByCategory.module.scss';
 
 interface Props {
@@ -8,11 +9,16 @@ interface Props {
 }
 
 export const ShopByCategory: React.FC<Props> = ({ products }) => {
-  // Підраховуємо кількість товарів у кожній категорії
-  const phonesCount = products.filter(p => p.category === 'phones').length;
-  const tabletsCount = products.filter(p => p.category === 'tablets').length;
+  const phonesCount = products.filter(
+    product => product.category === 'phones',
+  ).length;
+
+  const tabletsCount = products.filter(
+    product => product.category === 'tablets',
+  ).length;
+
   const accessoriesCount = products.filter(
-    p => p.category === 'accessories',
+    product => product.category === 'accessories',
   ).length;
 
   const categories = [
@@ -20,22 +26,19 @@ export const ShopByCategory: React.FC<Props> = ({ products }) => {
       title: 'Mobile phones',
       count: `${phonesCount} models`,
       link: '/phones',
-      img: `${import.meta.env.BASE_URL}img/category-phones.png`,
-      bgColor: '#6d6474',
+      img: getPublicUrl('img/category-phones.png'),
     },
     {
       title: 'Tablets',
       count: `${tabletsCount} models`,
       link: '/tablets',
-      img: `${import.meta.env.BASE_URL}img/category-tablets.png`,
-      bgColor: '#8d8d92',
+      img: getPublicUrl('img/category-tablets.png'),
     },
     {
       title: 'Accessories',
       count: `${accessoriesCount} models`,
       link: '/accessories',
-      img: `${import.meta.env.BASE_URL}img/category-accessories.png`,
-      bgColor: '#973d5f',
+      img: getPublicUrl('img/category-accessories.png'),
     },
   ];
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { CartItem as CartItemType } from '../../types/CartItem';
 import { useCart } from '../../context/CartContext/CartContext';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './CartItem.module.scss';
 
 interface Props {
@@ -41,7 +42,7 @@ export const CartItem: React.FC<Props> = ({ item }) => {
       {/* Зображення */}
       <Link to={`/product/${product.itemId}`} className={styles.imageWrapper}>
         <img
-          src={`${import.meta.env.BASE_URL}${product.image.replace(/^\/+/, '')}`}
+          src={getPublicUrl(product.image)}
           alt={product.name}
           className={styles.image}
         />
@@ -62,7 +63,9 @@ export const CartItem: React.FC<Props> = ({ item }) => {
         >
           -
         </button>
+
         <span className={styles.quantity}>{quantity}</span>
+
         <button
           type="button"
           onClick={handleIncrease}

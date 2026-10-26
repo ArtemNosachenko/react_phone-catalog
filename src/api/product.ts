@@ -1,10 +1,11 @@
 import { Product } from '../types/Product';
 import { ProductDetails } from '../types/ProductDetails';
+import { getPublicUrl } from '../utils/getPublicUrl';
 
-const BASE_URL = `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}api`;
+const API_URL = getPublicUrl('api');
 
 export const getProducts = async (): Promise<Product[]> => {
-  const response = await fetch(`${BASE_URL}/products.json`);
+  const response = await fetch(`${API_URL}/products.json`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch products');
@@ -20,7 +21,7 @@ export const getProductDetails = async (
 
   for (const category of categories) {
     try {
-      const response = await fetch(`${BASE_URL}/${category}.json`);
+      const response = await fetch(`${API_URL}/${category}.json`);
 
       if (response.ok) {
         const products: ProductDetails[] = await response.json();
@@ -30,7 +31,9 @@ export const getProductDetails = async (
           return product;
         }
       }
-    } catch {}
+    } catch {
+      // Продовжуємо перевіряти інші категорії
+    }
   }
 
   throw new Error('Product not found');

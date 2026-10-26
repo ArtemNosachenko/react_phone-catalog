@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './Footer.module.scss';
 
 export const Footer = () => {
@@ -11,11 +12,10 @@ export const Footer = () => {
 
   return (
     <footer className={styles.footer}>
-      {/* Поєднуємо глобальний клас container та локальний styles.container */}
       <div className={`container ${styles.container}`}>
         <Link to="/" className={styles.logo}>
           <img
-            src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
+            src={getPublicUrl('img/icons/logo.svg')}
             alt="Nice Gadget Logo"
           />
         </Link>
@@ -29,9 +29,11 @@ export const Footer = () => {
           >
             GITHUB
           </a>
+
           <a href="#contacts" className={styles.link}>
             CONTACTS
           </a>
+
           <a href="#rights" className={styles.link}>
             RIGHTS
           </a>
@@ -43,9 +45,10 @@ export const Footer = () => {
           className={styles.backToTop}
         >
           <span>Back to top</span>
+
           <div className={styles.arrowIcon}>
             <img
-              src={`${import.meta.env.BASE_URL}img/icons/arrow-up.svg`}
+              src={getPublicUrl('img/icons/arrow-up.svg')}
               alt="Back to top"
             />
           </div>

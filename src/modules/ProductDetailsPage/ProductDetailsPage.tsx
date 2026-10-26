@@ -6,6 +6,7 @@ import { getProductDetails, getSuggestedProducts } from '../../api/product';
 import { useCart } from '../../context/CartContext/CartContext';
 import { useFavorites } from '../../context/FavoritesContext/FavoritesContext';
 import { colorMap } from '../../utils/colorMap';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import { ProductCard } from '../../components/ProductCard';
 import styles from './ProductDetailsPage.module.scss';
 
@@ -15,7 +16,7 @@ export const ProductDetailsPage = () => {
 
   const [product, setProduct] = useState<ProductDetails | null>(null);
   const [suggested, setSuggested] = useState<Product[]>([]);
-  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,6 +25,9 @@ export const ProductDetailsPage = () => {
 
   useEffect(() => {
     if (!productId) {
+      setError('Product was not found');
+      setLoading(false);
+
       return;
     }
 
@@ -33,11 +37,15 @@ export const ProductDetailsPage = () => {
     Promise.all([getProductDetails(productId), getSuggestedProducts()])
       .then(([details, suggestedData]) => {
         setProduct(details);
-        setSelectedImage(details.images[0]);
+        setSelectedImage(details.images[0] || '');
         setSuggested(suggestedData);
       })
-      .catch(() => setError('Product was not found'))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        setError('Product was not found');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [productId]);
 
   if (loading) {
@@ -67,7 +75,7 @@ export const ProductDetailsPage = () => {
     color: product.color,
     ram: product.ram,
     year: 2022,
-    image: product.images[0],
+    image: product.images[0] || '',
   };
 
   const inCart = isInCart(product.id);
@@ -75,23 +83,22 @@ export const ProductDetailsPage = () => {
 
   return (
     <main className={`container ${styles.pageWrapper}`}>
-      {/* Хлібні крихти з іконкою хатки */}
       <div className={styles.breadcrumbs}>
-        <Link to="/" className={styles.crumbLink}>
-          <img
-            src={`${import.meta.env.BASE_URL}img/icons/home.svg`}
-            alt="Home"
-          />
+        <Link to="/" className={styles.crumbLink} aria-label="Home">
+          <img src={getPublicUrl('img/icons/home.svg')} alt="" />
         </Link>
+
         <span className={styles.crumbSeparator}>&gt;</span>
+
         <Link to={`/${product.category}`} className={styles.crumbLink}>
           {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
         </Link>
+
         <span className={styles.crumbSeparator}>&gt;</span>
+
         <span className={styles.crumbCurrent}>{product.name}</span>
       </div>
 
-      {/* Кнопка повернення */}
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -102,43 +109,49 @@ export const ProductDetailsPage = () => {
 
       <h1 className={styles.title}>{product.name}</h1>
 
-      {/* Основний блок товару: 14 колонок Галерея / 10 колонок Панель */}
       <div className="mainGrid">
         <div className="colGallery">
           <div className={styles.gallery}>
             <div className={styles.thumbnails}>
-              {product.images.map(img => (
+              {product.images.map((img, index) => (
                 <button
-                  key={img}
+                  key={`${img}-${index}`}
                   type="button"
                   onClick={() => setSelectedImage(img)}
-                  className={`${styles.thumbBtn} ${selectedImage === img ? styles.activeThumb : ''}`}
+                  className={`${styles.thumbBtn} ${
+                    selectedImage === img ? styles.activeThumb : ''
+                  }`}
+                  aria-label={`View product image ${index + 1}`}
+                  aria-pressed={selectedImage === img}
                 >
                   <img
-                    src={`${import.meta.env.BASE_URL}${img.replace(/^\/+/, '')}`}
-                    alt={product.name}
+                    src={getPublicUrl(img)}
+                    alt={`${product.name} view ${index + 1}`}
                     className={styles.thumbImage}
                   />
                 </button>
               ))}
             </div>
+
             <div className={styles.mainImageWrapper}>
-              <img
-                src={`/${selectedImage}`}
-                alt={product.name}
-                className={styles.mainImage}
-              />
+              {selectedImage && (
+                <img
+                  src={getPublicUrl(selectedImage)}
+                  alt={product.name}
+                  className={styles.mainImage}
+                />
+              )}
             </div>
           </div>
         </div>
 
         <div className="colDetailsPanel">
           <div className={styles.detailsPanel}>
-            {/* Вибір кольору */}
             <div className={styles.optionGroup}>
               <div className={styles.optionHeader}>
                 <span className={styles.optionLabel}>Available colors</span>
               </div>
+
               <div className={styles.colorsList}>
                 {product.colorsAvailable.map(color => {
                   const targetUrl = getVariantUrl(color, product.capacity);
@@ -149,9 +162,13 @@ export const ProductDetailsPage = () => {
                     <Link
                       key={color}
                       to={targetUrl}
-                      className={`${styles.colorCircle} ${isCurrent ? styles.activeColor : ''}`}
+                      className={`${styles.colorCircle} ${
+                        isCurrent ? styles.activeColor : ''
+                      }`}
                       style={{ backgroundColor: hexColor }}
                       title={color}
+                      aria-label={`Select color ${color}`}
+                      aria-current={isCurrent ? 'page' : undefined}
                     />
                   );
                 })}
@@ -160,11 +177,11 @@ export const ProductDetailsPage = () => {
 
             <div className={styles.divider} />
 
-            {/* Вибір пам'яті */}
             <div className={styles.optionGroup}>
               <div className={styles.optionHeader}>
                 <span className={styles.optionLabel}>Select capacity</span>
               </div>
+
               <div className={styles.capacityList}>
                 {product.capacityAvailable.map(cap => {
                   const targetUrl = getVariantUrl(product.color, cap);
@@ -174,7 +191,10 @@ export const ProductDetailsPage = () => {
                     <Link
                       key={cap}
                       to={targetUrl}
-                      className={`${styles.capacityBtn} ${isCurrent ? styles.activeCapacity : ''}`}
+                      className={`${styles.capacityBtn} ${
+                        isCurrent ? styles.activeCapacity : ''
+                      }`}
+                      aria-current={isCurrent ? 'page' : undefined}
                     >
                       {cap}
                     </Link>
@@ -185,12 +205,12 @@ export const ProductDetailsPage = () => {
 
             <div className={styles.divider} />
 
-            {/* Ціни та кнопки дій */}
             <div className={styles.priceSection}>
               <div className={styles.prices}>
                 <span className={styles.priceDiscount}>
                   ${product.priceDiscount}
                 </span>
+
                 <span className={styles.priceRegular}>
                   ${product.priceRegular}
                 </span>
@@ -199,7 +219,11 @@ export const ProductDetailsPage = () => {
               <div className={styles.actions}>
                 <button
                   type="button"
-                  onClick={() => !inCart && addToCart(baseProduct)}
+                  onClick={() => {
+                    if (!inCart) {
+                      addToCart(baseProduct);
+                    }
+                  }}
                   className={`${styles.cartBtn} ${inCart ? styles.inCart : ''}`}
                 >
                   {inCart ? 'Added to cart' : 'Add to cart'}
@@ -208,37 +232,41 @@ export const ProductDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => toggleFavorite(baseProduct)}
-                  className={`${styles.favoriteBtn} ${favorite ? styles.activeFav : ''}`}
+                  className={`${styles.favoriteBtn} ${
+                    favorite ? styles.activeFav : ''
+                  }`}
                   aria-label={
                     favorite ? 'Remove from favorites' : 'Add to favorites'
                   }
                 >
                   <img
-                    src={
+                    src={getPublicUrl(
                       favorite
-                        ? `${import.meta.env.BASE_URL}img/icons/heart-filled.svg`
-                        : `${import.meta.env.BASE_URL}img/icons/heart.svg`
-                    }
-                    alt="Favorite"
+                        ? 'img/icons/heart-filled.svg'
+                        : 'img/icons/heart.svg',
+                    )}
+                    alt=""
                   />
                 </button>
               </div>
             </div>
 
-            {/* Короткі характеристики */}
             <div className={styles.shortSpecs}>
               <div className={styles.specRow}>
                 <span>Screen</span>
                 <span>{product.screen}</span>
               </div>
+
               <div className={styles.specRow}>
                 <span>Resolution</span>
                 <span>{product.resolution}</span>
               </div>
+
               <div className={styles.specRow}>
                 <span>Processor</span>
                 <span>{product.processor}</span>
               </div>
+
               <div className={styles.specRow}>
                 <span>RAM</span>
                 <span>{product.ram}</span>
@@ -248,18 +276,18 @@ export const ProductDetailsPage = () => {
         </div>
       </div>
 
-      {/* Опис і повні характеристики у сітці */}
       <div className="mainGrid" style={{ marginTop: '56px' }}>
-        {/* About (14 колонок на Desktop) */}
         <div className="colGallery">
           <div className={styles.aboutBlock}>
             <h2 className={styles.sectionTitle}>About</h2>
             <div className={styles.divider} />
+
             {product.description.map(item => (
               <div key={item.title} className={styles.descParagraph}>
                 <h3 className={styles.descTitle}>{item.title}</h3>
-                {item.text.map((textLine, i) => (
-                  <p key={i} className={styles.descText}>
+
+                {item.text.map((textLine, index) => (
+                  <p key={index} className={styles.descText}>
                     {textLine}
                   </p>
                 ))}
@@ -268,40 +296,47 @@ export const ProductDetailsPage = () => {
           </div>
         </div>
 
-        {/* Tech Specs (10 колонок на Desktop) */}
         <div className="colDetailsPanel">
           <div className={styles.specsBlock}>
             <h2 className={styles.sectionTitle}>Tech specs</h2>
             <div className={styles.divider} />
+
             <div className={styles.techSpecsList}>
               <div className={styles.techSpecRow}>
                 <span>Screen</span>
                 <span>{product.screen}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Resolution</span>
                 <span>{product.resolution}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Processor</span>
                 <span>{product.processor}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>RAM</span>
                 <span>{product.ram}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Built in memory</span>
                 <span>{product.capacity}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Camera</span>
                 <span>{product.camera}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Zoom</span>
                 <span>{product.zoom}</span>
               </div>
+
               <div className={styles.techSpecRow}>
                 <span>Cell</span>
                 <span>{product.cell.join(', ')}</span>
@@ -311,10 +346,10 @@ export const ProductDetailsPage = () => {
         </div>
       </div>
 
-      {/* Слайдер рекомендованих товарів */}
       {suggested.length > 0 && (
         <section className={styles.suggestedSection}>
           <h2 className={styles.sectionTitle}>You may also like</h2>
+
           <div className="mainGrid">
             {suggested.map(item => (
               <div key={item.id} className="colProductCard">

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Product } from '../../types/Product';
 import { useCart } from '../../context/CartContext/CartContext';
 import { useFavorites } from '../../context/FavoritesContext/FavoritesContext';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './ProductCard.module.scss';
 
 interface Props {
@@ -29,25 +30,25 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
     toggleFavorite(product);
   };
 
+  const productImage = getPublicUrl(image);
+
+  const favoriteIcon = getPublicUrl(
+    favorite ? 'img/icons/heart-filled.svg' : 'img/icons/heart.svg',
+  );
+
   return (
     <div className={styles.card}>
-      {/* Картинка із посиланням на деталі */}
       <Link to={`/product/${itemId}`} className={styles.imageLink}>
-        <img
-          src={`${import.meta.env.BASE_URL}${image.replace(/^\/+/, '')}`}
-          alt={name}
-          className={styles.image}
-        />
+        <img src={productImage} alt={name} className={styles.image} />
       </Link>
 
-      {/* Назва товару із посиланням */}
       <Link to={`/product/${itemId}`} className={styles.title}>
         {name}
       </Link>
 
-      {/* Блок цін */}
       <div className={styles.prices}>
         <span className={styles.price}>${price}</span>
+
         {fullPrice > price && (
           <span className={styles.fullPrice}>${fullPrice}</span>
         )}
@@ -55,23 +56,23 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
 
       <div className={styles.divider} />
 
-      {/* Характеристики */}
       <div className={styles.specs}>
         <div className={styles.specRow}>
           <span className={styles.specLabel}>Screen</span>
           <span className={styles.specValue}>{screen}</span>
         </div>
+
         <div className={styles.specRow}>
           <span className={styles.specLabel}>Capacity</span>
           <span className={styles.specValue}>{capacity}</span>
         </div>
+
         <div className={styles.specRow}>
           <span className={styles.specLabel}>RAM</span>
           <span className={styles.specValue}>{ram}</span>
         </div>
       </div>
 
-      {/* Кнопки дій */}
       <div className={styles.actions}>
         <button
           type="button"
@@ -85,16 +86,9 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
           type="button"
           onClick={handleFavoriteClick}
           className={`${styles.favBtn} ${favorite ? styles.isFavorite : ''}`}
-          aria-label="Add to favorites"
+          aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <img
-            src={
-              favorite
-                ? `${import.meta.env.BASE_URL}img/icons/heart-filled.svg`
-                : `${import.meta.env.BASE_URL}img/icons/heart.svg`
-            }
-            alt="Favorite"
-          />
+          <img src={favoriteIcon} alt="" />
         </button>
       </div>
     </div>

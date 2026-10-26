@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '../../context/CartContext/CartContext';
 import { useFavorites } from '../../context/FavoritesContext/FavoritesContext';
+import { getPublicUrl } from '../../utils/getPublicUrl';
 import styles from './Header.module.scss';
 
 export const Header = () => {
@@ -22,13 +23,12 @@ export const Header = () => {
 
   return (
     <header className={styles.header}>
-      {/* Використовуємо глобальний container, щоб вирівняти Header із контентом сторінки */}
       <div className={styles.headerContainer}>
         <div className={styles.leftContent}>
           {/* Логотип */}
           <Link to="/" className={styles.logo} onClick={closeMenu}>
             <img
-              src={`${import.meta.env.BASE_URL}img/icons/logo.svg`}
+              src={getPublicUrl('img/icons/logo.svg')}
               alt="Nice Gadgets"
               className={styles.logoImg}
             />
@@ -39,12 +39,15 @@ export const Header = () => {
             <NavLink to="/" className={getNavLinkClass}>
               Home
             </NavLink>
+
             <NavLink to="/phones" className={getNavLinkClass}>
               Phones
             </NavLink>
+
             <NavLink to="/tablets" className={getNavLinkClass}>
               Tablets
             </NavLink>
+
             <NavLink to="/accessories" className={getNavLinkClass}>
               Accessories
             </NavLink>
@@ -55,10 +58,8 @@ export const Header = () => {
         <div className={styles.actions}>
           <NavLink to="/favorites" className={getIconLinkClass}>
             <div className={styles.iconWrapper}>
-              <img
-                src={`${import.meta.env.BASE_URL}img/icons/heart.svg`}
-                alt="Favorites"
-              />
+              <img src={getPublicUrl('img/icons/heart.svg')} alt="Favorites" />
+
               {totalFavoritesCount > 0 && (
                 <span className={styles.badge}>{totalFavoritesCount}</span>
               )}
@@ -67,10 +68,8 @@ export const Header = () => {
 
           <NavLink to="/cart" className={getIconLinkClass}>
             <div className={styles.iconWrapper}>
-              <img
-                src={`${import.meta.env.BASE_URL}img/icons/cart.svg`}
-                alt="Cart"
-              />
+              <img src={getPublicUrl('img/icons/cart.svg')} alt="Cart" />
+
               {totalCartCount > 0 && (
                 <span className={styles.badge}>{totalCartCount}</span>
               )}
@@ -82,6 +81,7 @@ export const Header = () => {
             className={`${styles.burgerBtn} ${isMenuOpen ? styles.open : ''}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
             <span className={styles.burgerLine} />
             <span className={styles.burgerLine} />
@@ -97,6 +97,7 @@ export const Header = () => {
             <NavLink to="/" className={getNavLinkClass} onClick={closeMenu}>
               Home
             </NavLink>
+
             <NavLink
               to="/phones"
               className={getNavLinkClass}
@@ -104,6 +105,7 @@ export const Header = () => {
             >
               Phones
             </NavLink>
+
             <NavLink
               to="/tablets"
               className={getNavLinkClass}
@@ -111,6 +113,7 @@ export const Header = () => {
             >
               Tablets
             </NavLink>
+
             <NavLink
               to="/accessories"
               className={getNavLinkClass}
