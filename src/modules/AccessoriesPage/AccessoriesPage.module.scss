@@ -72,13 +72,22 @@
   color: #89939a;
 }
 
-/* 1. КВАДРАТНИЙ СЕЛЕКТ */
 .select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
   height: 40px;
-  padding: 0 12px;
+  padding: 0 36px 0 12px;
   border: 1px solid #b4bdc3;
-  border-radius: 0; // Замість 8px
+  border-radius: 0;
   background-color: #fff;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230f0f11' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
   font-weight: 700;
   font-size: 14px;
   color: #0f0f11;

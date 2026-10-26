@@ -46,6 +46,12 @@ body {
   background-color: #fff;
 }
 
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
 button,
 input,
 select,
@@ -126,4 +132,14 @@ textarea {
   @media (max-width: 639px) {
     grid-column: span 4;
   }
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
 }

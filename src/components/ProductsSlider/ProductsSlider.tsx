@@ -6,14 +6,18 @@ import styles from './ProductsSlider.module.scss';
 interface Props {
   title: string;
   products: Product[];
+  showFullPrice?: boolean;
 }
 
-export const ProductsSlider: React.FC<Props> = ({ title, products }) => {
+export const ProductsSlider: React.FC<Props> = ({
+  title,
+  products,
+  showFullPrice = false,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Кількість видимих карток за один раз (для простоти розрахунку зсуву)
-  const cardWidth = 272; // Ширина картки + gap
-  const frameSize = 4; // Скільки карток видно за раз на десктопі
+  const cardWidth = 272;
+  const frameSize = 4;
 
   const maxIndex = Math.max(0, products.length - frameSize);
 
@@ -40,6 +44,7 @@ export const ProductsSlider: React.FC<Props> = ({ title, products }) => {
           >
             &lt;
           </button>
+
           <button
             type="button"
             onClick={handleNext}
@@ -61,7 +66,7 @@ export const ProductsSlider: React.FC<Props> = ({ title, products }) => {
         >
           {products.map(product => (
             <div key={product.id} className={styles.cardWrapper}>
-              <ProductCard product={product} />
+              <ProductCard product={product} showFullPrice={showFullPrice} />
             </div>
           ))}
         </div>

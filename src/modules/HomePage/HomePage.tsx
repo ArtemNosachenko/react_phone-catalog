@@ -24,7 +24,7 @@ export const HomePage = () => {
       });
   }, []);
 
-  // Товари зі знижкою (Hot Prices)
+  // Hot Prices: товари з найбільшими знижками на початку
   const hotPrices = useMemo(() => {
     return [...products].sort((a, b) => {
       const discountA = a.fullPrice - a.price;
@@ -34,7 +34,7 @@ export const HomePage = () => {
     });
   }, [products]);
 
-  // Найновіші товари (Brand New)
+  // Brand New: найновіші товари, показуємо fullPrice
   const brandNew = useMemo(() => {
     return [...products].sort((a, b) => b.year - a.year);
   }, [products]);
@@ -51,24 +51,20 @@ export const HomePage = () => {
     <main className={`container ${styles.pageWrapper}`}>
       <h1 className={styles.title}>Welcome to Nice Gadgets store!</h1>
 
-      {/* Головний баннер */}
       <section className={styles.section}>
         <PicturesSlider />
       </section>
 
-      {/* Блок Hot Prices */}
       <section className={styles.section}>
         <ProductsSlider title="Hot prices" products={hotPrices} />
       </section>
 
-      {/* Блок Категорій */}
       <section className={styles.section}>
         <ShopByCategory products={products} />
       </section>
 
-      {/* Блок Brand New */}
       <section className={styles.section}>
-        <ProductsSlider title="Brand new" products={brandNew} />
+        <ProductsSlider title="Brand new" products={brandNew} showFullPrice />
       </section>
     </main>
   );

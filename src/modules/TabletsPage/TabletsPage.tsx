@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { Fragment, useEffect, useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Product } from '../../types/Product';
 import { getProducts } from '../../api/product';
@@ -142,19 +142,38 @@ export const TabletsPage = () => {
             &lt;
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button
-              key={page}
-              type="button"
-              onClick={() => handlePageChange(page)}
-              className={`${styles.pageBtn} ${
-                currentPage === page ? styles.activePage : ''
-              }`}
-              aria-current={currentPage === page ? 'page' : undefined}
-            >
-              {page}
-            </button>
-          ))}
+          {Array.from(
+            new Set(
+              [
+                1,
+                2,
+                3,
+                currentPage - 1,
+                currentPage,
+                currentPage + 1,
+                totalPages,
+              ].filter(page => page >= 1 && page <= totalPages),
+            ),
+          )
+            .sort((a, b) => a - b)
+            .map((page, index, pages) => (
+              <Fragment key={page}>
+                {index > 0 && pages[index - 1] < page - 1 && (
+                  <span className={styles.pageBtn}>...</span>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(page)}
+                  className={`${styles.pageBtn} ${
+                    currentPage === page ? styles.activePage : ''
+                  }`}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                >
+                  {page}
+                </button>
+              </Fragment>
+            ))}
 
           <button
             type="button"

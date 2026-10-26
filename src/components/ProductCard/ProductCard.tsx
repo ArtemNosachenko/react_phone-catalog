@@ -8,9 +8,13 @@ import styles from './ProductCard.module.scss';
 
 interface Props {
   product: Product;
+  showFullPrice?: boolean;
 }
 
-export const ProductCard: React.FC<Props> = ({ product }) => {
+export const ProductCard: React.FC<Props> = ({
+  product,
+  showFullPrice = false,
+}) => {
   const { addToCart, isInCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
 
@@ -47,9 +51,11 @@ export const ProductCard: React.FC<Props> = ({ product }) => {
       </Link>
 
       <div className={styles.prices}>
-        <span className={styles.price}>${price}</span>
+        <span className={styles.price}>
+          ${showFullPrice ? fullPrice : price}
+        </span>
 
-        {fullPrice > price && (
+        {!showFullPrice && fullPrice > price && (
           <span className={styles.fullPrice}>${fullPrice}</span>
         )}
       </div>
